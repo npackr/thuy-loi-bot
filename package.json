@@ -1,6 +1,6 @@
 {
   "name": "em-gai-thuy-loi-discord-bot",
-  "version": "0.0.1",
+  "version": "2022.10.05.2",
   "description": "A Discord Bot for university management",
   "main": "deploy-commands.js",
   "scripts": {

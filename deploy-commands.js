@@ -20,7 +20,7 @@ const SCHOOL_NAME = "Phân hiệu Trường Đại học Thủy lợi";
 rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: createCommandsList() }).then(() => console.log('Successfully registered application commands to global!'));
 client.once('ready', () => { client.user.setActivity(`V${process.env.npm_package_version}`); client.user.setStatus('online') });
 client.on('interactionCreate', async interaction => {
-  await interaction.deferReply({ ephemeral: true });
+  await interaction.deferUpdate({ ephemeral: true });
   const configurations = await getConfigurations();
   if (!interaction.isCommand()) return;
   if (cooldown.has(interaction.user.id)) return interaction.editReply({ content: 'Bạn đã thực hiện lệnh này trong vòng 5 giây trước đó, vui lòng thử lại sau!', ephemeral: true });

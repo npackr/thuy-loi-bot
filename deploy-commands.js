@@ -13,14 +13,14 @@ client.login(process.env.DISCORD_TOKEN); console.log("Logging in successfully!")
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 const cooldown = new Set();
 const cooldownTime = 20000;
-const LOADING_STRING = "<a:loading:721911709773594684> Đang xử lý yêu cầu của bạn, vui lòng đợi...";
+const LOADING_STRING = `Đang xử lý yêu cầu của bạn, vui lòng đợi...`;
 const ADMIN_ID = "336096287407472641";
 const FEATURE_ARE_IN_DEVELOPMENT = "Chức năng này đang được phát triển, vui lòng quay lại sau!";
 const SCHOOL_NAME = "Phân hiệu Trường Đại học Thủy lợi";
 rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: createCommandsList() }).then(() => console.log('Successfully registered application commands to global!'));
 client.once('ready', () => { client.user.setActivity(`V${process.env.npm_package_version}`); client.user.setStatus('online') });
 client.on('interactionCreate', async interaction => {
-  await interaction.deferUpdate({ ephemeral: true });
+  await interaction.reply({ content: LOADING_STRING, ephemeral: true });
   const configurations = await getConfigurations();
   if (!interaction.isCommand()) return;
   if (cooldown.has(interaction.user.id)) return interaction.editReply({ content: 'Bạn đã thực hiện lệnh này trong vòng 5 giây trước đó, vui lòng thử lại sau!', ephemeral: true });
@@ -60,6 +60,7 @@ client.on('interactionCreate', async interaction => {
         const learnMoreRow = new ActionRowBuilder().addComponents(new ButtonBuilder().setLabel('Tìm hiểu thêm').setStyle(ButtonStyle.Link).setURL(school.learn_more_url));
         return await i.editReply({ content: `${stringHeader.toUpperCase()}\n${base_1_string}\n${base_2_string}\n${stringContent}`, components: [learnMoreRow] });
       }
+
       if (i.values[0] === 'admission_type') {
         return await i.editReply({ content: FEATURE_ARE_IN_DEVELOPMENT, components: [] });
       }

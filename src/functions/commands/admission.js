@@ -8,8 +8,8 @@ import { schoolInformation } from "./admission/school_information/schoolInformat
 
 export async function admission(interaction, user) {
   const string = getString(user.language);
-  const stringHeader = `${string.SCHOOL_LOGO}   **Thông tin tuyển sinh**`;
-  const stringSubHeader = `**Trình độ đại học năm ${new Date().getFullYear()}**`;
+  const stringHeader = `${string.SCHOOL_LOGO}\n**${string.ADMISSION_INFOMATION}**`;
+  const stringSubHeader = `**${string.UNIVERSITY_DEGREE} ${new Date().getFullYear()}**`;
   const categories = [
     { value: 'school_information', label: 'Thông tin trường', description: 'Phân hiệu trường Đại học Thủy lợi' },
     { value: 'admission_type', label: 'Hình thức xét tuyển', description: 'Kết quả thi THPT Quốc gia - Xét học bạ - Tuyển thẳng' },

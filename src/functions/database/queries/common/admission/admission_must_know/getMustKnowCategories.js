@@ -3,7 +3,7 @@ import { fetchGraphQL } from "../../../../graphql/fetchGraphQL.js";
 export async function getMustKnowCategories() {
   const operationsDoc = `
   query getFeedCategories {
-    admission_must_know_categories {
+    admission_must_know_categories (order_by: {id: desc}) {
       description
       id
       name

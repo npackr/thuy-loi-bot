@@ -1,2 +1,2 @@
 web: npm start
-worker: npm run test
+worker: npm run deploy

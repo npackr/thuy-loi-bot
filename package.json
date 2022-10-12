@@ -1,10 +1,10 @@
 {
   "name": "em-gai-thuy-loi-discord-bot",
-  "version": "2022.10.09.1",
+  "version": "2022.10.12.1",
   "description": "A Discord Bot for university management",
   "main": "deploy-commands.js",
   "scripts": {
-    "test": "node deploy-commands.js"
+    "deploy": "node deploy-commands.js"
   },
   "author": "npackr",
   "license": "ISC",

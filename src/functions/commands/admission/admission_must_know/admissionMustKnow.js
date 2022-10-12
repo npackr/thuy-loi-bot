@@ -40,7 +40,7 @@ export async function admissionMustKnow(interaction, user) {
           const articleString = `**${article.title}**\n\n> ${article.contentSnippet}`;
           const readFullArticleButton = new ButtonBuilder().setLabel(string.READ_FULL).setStyle(ButtonStyle.Link).setURL(article.link);
           const articleRow = new ActionRowBuilder().addComponents(readFullArticleButton);
-          await i.editReply({ content: `${stringHeader}\n\n${categoryString}\n${articleString}`, components: [articleRow], ephemeral: true });
+          await i.editReply({ content: `${stringHeader}\n${categoryString}\n\n${articleString}`, components: [articleRow], ephemeral: true });
         }
       });
     }

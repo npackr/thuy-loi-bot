@@ -9,7 +9,7 @@ import { getConfigurations } from "./src/functions/database/queries/common/getCo
 import { getString } from "./src/functions/languages/stringRouter.js";
 
 config();
-export const cooldownTime = 20000;
+export const cooldownTime = 30000;
 const LANGUAGE = "vi_VN";
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds], 'partials': [Partials.Channel] });
@@ -26,7 +26,7 @@ client.on('interactionCreate', async interaction => {
   await interaction.deferReply({ ephemeral: true });
   const configurations = await getConfigurations();
   if (cooldown.has(interaction.user.id)) return interaction.editReply({
-    content: `${string.YOU_ARE_IN_COOLDOWN_PLEASE_WAIT} ${cooldownTime} ${string.SECONDS}`, ephemeral: true
+    content: `${string.YOU_ARE_IN_COOLDOWN_PLEASE_WAIT} ${cooldownTime / 1000} ${string.SECONDS}`, ephemeral: true
   });
   // REPLYING TO COMMANDS
   cooldown.add(interaction.user.id); setTimeout(() => { cooldown.delete(interaction.user.id) }, cooldownTime);

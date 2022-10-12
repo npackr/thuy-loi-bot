@@ -5,3 +5,6 @@ export const FEATURE_ARE_IN_DEVELOPMENT = "Chức năng này đang được phá
 export const SCHOOL_NAME = "Phân hiệu Trường Đại học Thủy lợi";
 export const YOU_ARE_IN_COOLDOWN_PLEASE_WAIT = "Vui lòng hoàn thành lệnh hiện tại hoặc thử lại lần nữa!\nThời gian chờ thực hiện xong lệnh là";
 export const SECONDS = "giây";
+export const ADMISSION_INDUSTRIES_LIST = "Danh sách các ngành đào tạo";
+export const REQUIRED_CLASS = "Tổ hợp xét tuyển";
+export const ADMISSION_TYPE_LIST = "Hình thức xét tuyển";

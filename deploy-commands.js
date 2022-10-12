@@ -1,7 +1,7 @@
 // EM GAI THUY LOI Discord Bot by npackr
 // 2022 - All rights reserved
 
-import { Client, GatewayIntentBits, Partials, REST, Routes } from "discord.js";
+import { AttachmentBuilder, Client, GatewayIntentBits, Partials, REST, Routes } from "discord.js";
 import { config } from "dotenv";
 import { commandsRouter } from "./src/functions/commandsRouter.js";
 import { createCommandsList } from "./src/functions/createCommandsList.js";
@@ -12,7 +12,7 @@ config();
 export const cooldownTime = 30000;
 const LANGUAGE = "vi_VN";
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds], 'partials': [Partials.Channel] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent], 'partials': [Partials.Channel, Partials.Message] });
 client.login(process.env.DISCORD_TOKEN);
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 const cooldown = new Set();
@@ -37,5 +37,22 @@ client.on('interactionCreate', async interaction => {
   }
   if (interaction.commandName === 'addmission') {
     await commandsRouter("admission", interaction, user);
+  }
+});
+
+client.on('messageCreate', async message => {
+  if (message.author.bot) return;
+  if (message.mentions.has(client.user)) {
+    const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/find_out_em_gai_thuy_loi.jpg');
+    await message.reply({ content: `${string.BOT_INSTRUCTION}`, files: [instructionImage] });
+  }
+  const admissionCondition = (message.content.includes('đăng ký')) || (message.content.includes('dang ky')) || (message.content.includes('nhập học')) || (message.content.includes('nhap hoc'));
+  const registerCondition = (message.content.includes('tuyển sinh')) || (message.content.includes('tuyen sinh') || (message.content.includes('xet hoc ba') || (message.content.includes('xét học bạ')) || (message.content.includes('nguyện vọng')) || (message.content.includes('nguyen vong'))));
+  
+  if (registerCondition) {
+    return await message.reply({ content: `${string.ADMISSION_INSTRUCTION}`});
+  }
+  if (admissionCondition) {
+    return await message.reply({ content: `${string.REGISTER_INSTRUCTION}`});
   }
 });

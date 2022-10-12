@@ -7,6 +7,9 @@ import { commandsRouter } from "./src/functions/commandsRouter.js";
 import { createCommandsList } from "./src/functions/createCommandsList.js";
 import { getConfigurations } from "./src/functions/database/queries/common/getConfigurations.js";
 import { getString } from "./src/functions/languages/stringRouter.js";
+import { checkBotInstructionConditions } from "./src/functions/messages/botInstructionConditions.js";
+import { checkAdmissionConditions } from "./src/functions/messages/admissionConditions.js";
+import { checkRegisterCondition } from "./src/functions/messages/registerConditions.js";
 
 config();
 export const cooldownTime = 30000;
@@ -42,17 +45,11 @@ client.on('interactionCreate', async interaction => {
 
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
-  if (message.mentions.has(client.user)) {
+  if (message.mentions.has(client.user) || checkBotInstructionConditions(message.content) ) {
     const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/find_out_em_gai_thuy_loi.jpg');
     await message.reply({ content: `${string.BOT_INSTRUCTION}`, files: [instructionImage] });
   }
-  const admissionCondition = (message.content.includes('đăng ký')) || (message.content.includes('dang ky')) || (message.content.includes('nhập học')) || (message.content.includes('nhap hoc'));
-  const registerCondition = (message.content.includes('tuyển sinh')) || (message.content.includes('tuyen sinh') || (message.content.includes('xet hoc ba') || (message.content.includes('xét học bạ')) || (message.content.includes('nguyện vọng')) || (message.content.includes('nguyen vong'))));
-  
-  if (registerCondition) {
-    return await message.reply({ content: `${string.ADMISSION_INSTRUCTION}`});
-  }
-  if (admissionCondition) {
-    return await message.reply({ content: `${string.REGISTER_INSTRUCTION}`});
-  }
+  if (checkAdmissionConditions(message.content)) { return await message.reply({ content: `${string.ADMISSION_INSTRUCTION}`}); }
+  if (checkRegisterCondition(message.content)) { return await message.reply({ content: `${string.REGISTER_INSTRUCTION}`}); }
+  if (checkIndustriesConditions(message.content)) { return await message.reply({ content: `${string.INDUSTRIES_INSTRUCTION}`}); }
 });

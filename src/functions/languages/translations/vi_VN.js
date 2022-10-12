@@ -16,5 +16,6 @@ export const READ_FULL = "Đọc toàn bộ bài viết";
 export const ADMISSION_INFOMATION = "Thông tin tuyển sinh";
 export const UNIVERSITY_DEGREE = "Trình độ đại học";
 export const BOT_INSTRUCTION = "Để thông qua Em Gái Thủy Lợi tra cứu thông tin tuyển sinh của Phân hiệu Đại học Thủy lợi, bạn thực hiện nhập ` / ` vào khung nội dung chat, chọn biểu tượng của Em Gái Thủy lợi và bắt đầu sử dụng!";
-export const ADMISSION_INSTRUCTION = "Để xem thông tin của Phân hiệu Đại học Thủy lợi bạn có thể sử dụng lệnh ` /admission ` của Em Gái Thủy Lợi hoặc truy cập trang thông tin tuyển sinh: https://tlus.edu.vn/tuyen-sinh";
+export const ADMISSION_INSTRUCTION = "Để xem thông tin tuyển sinh của Phân hiệu Đại học Thủy lợi bạn có thể sử dụng lệnh ` /admission ` của Em Gái Thủy Lợi hoặc truy cập trang thông tin tuyển sinh: https://tlus.edu.vn/tuyen-sinh";
 export const REGISTER_INSTRUCTION = "Để đăng ký nhập học của Phân hiệu Đại học Thủy lợi bạn có thể sử dụng lệnh ` /register ` của Em Gái Thủy Lợi hoặc truy cập trang đăng ký nhập học: https://nhaphoc.tlus.edu.vn";
+export const INDUSTRIES_INSTRUCTION = "Phân hiệu Đại học Thủy lợi hiện đang đào tạo nhóm ngành Thủy lợi, KTXD, CNTT, Kế toán, Logistic và một số ngành khác nhau đáp ứng nhu cầu người học. Sử dụng lệnh ` /admission ` và chọn mục ` Ngành đào tạo ` để xem chi tiết";

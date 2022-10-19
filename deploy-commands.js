@@ -50,7 +50,13 @@ client.on('messageCreate', async message => {
     const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/find_out_em_gai_thuy_loi.jpg');
     await message.reply({ content: `${string.BOT_INSTRUCTION}`, files: [instructionImage] });
   }
-  if (checkAdmissionConditions(message.content)) { return await message.reply({ content: `${string.ADMISSION_INSTRUCTION}`}); }
-  if (checkRegisterCondition(message.content)) { return await message.reply({ content: `${string.REGISTER_INSTRUCTION}`}); }
-  if (checkIndustriesConditions(message.content)) { return await message.reply({ content: `${string.INDUSTRIES_INSTRUCTION}`}); }
+  if (checkAdmissionConditions(message.content) || message.content.includes('tuyển sinh') || message.content.includes('tuyen sinh')) {
+    return await message.reply({ content: `${string.ADMISSION_INSTRUCTION}`});
+  }
+  if (checkRegisterCondition(message.content) || message.content.includes("đăng ký") || message.content.includes("dang ky") || message.content.includes("nhập học") || message.content.includes("nhap hoc")) {
+    return await message.reply({ content: `${string.REGISTER_INSTRUCTION}`});
+  }
+  if (checkIndustriesConditions(message.content) || message.content.includes("nganh") || message.content.includes("ngành")) {
+    return await message.reply({ content: `${string.INDUSTRIES_INSTRUCTION}`});
+  }
 });

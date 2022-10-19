@@ -10,6 +10,7 @@ import { getString } from "./src/functions/languages/stringRouter.js";
 import { checkBotInstructionConditions } from "./src/functions/messages/botInstructionConditions.js";
 import { checkAdmissionConditions } from "./src/functions/messages/admissionConditions.js";
 import { checkRegisterCondition } from "./src/functions/messages/registerConditions.js";
+import { checkIndustriesConditions } from "./src/functions/messages/industriesConditions.js";
 
 config();
 export const cooldownTime = 30000;

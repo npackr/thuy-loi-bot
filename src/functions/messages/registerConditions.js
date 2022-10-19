@@ -1,5 +1,5 @@
 export function checkRegisterCondition(messageContent) {
-  switch (messageContent) {\
+  switch (messageContent) {
     case 'đăng ký': return true;
     case 'dang ky': return true;
     case 'nhập học': return true;

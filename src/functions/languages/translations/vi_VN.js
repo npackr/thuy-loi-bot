@@ -24,3 +24,4 @@ export const REGISTER_TIMEOUT = `Hiện đã hết thời gian đăng ký nhập
 export const NEW_STUDENT_REGISTER = "Đăng ký nhập học";
 export const GO_REGISTER = "Tiến hành đăng ký nhập học";
 export const REGISTER_DESCRIPTION = `Để đăng ký nhập học, bạn vui lòng bấm vào nút "Tiến hành đăng ký nhập học" bên dưới và thực hiện đầy đủ nội dung theo yêu cầu. Sau khi hoàn thành, bạn vui lòng chờ phản hồi từ phía ban quản lý để được xác nhận đăng ký nhập học thành công!`;
+export const WELCOME_TO = `Chào mừng đến với`;

@@ -4,9 +4,7 @@
   "description": "A Discord Bot for university management",
   "main": "deploy-commands.js",
   "scripts": {
-    "deploy-discord": "node deploy-commands.js",
-    "deploy-telegram" : "node deploy-telegram.js",
-    "deploy" : " npm run deploy-discord &&  npm run deploy-telegram"
+    "deploy" : "node deploy-commands.js"
   },
   "author": "npackr",
   "license": "ISC",

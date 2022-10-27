@@ -20,13 +20,14 @@ export async function admissionMustKnow(interaction, user) {
       await i.update({ content: string.LOADING_STRING, components: [], ephemeral: true });
       const category = categories.find((category) => category.id.toString() === i.values[0]);
       const feed = await getFeed(category.url);
+      const readMoreUrl = category.url;
       const articles = feed.items.map((article) => ({
         label: article.title.substring(0, 96) + "...",
         value: article.pubDate,
         description: article.contentSnippet.substring(0, 96) + "..."
       }));
       const articleMenu = new SelectMenuBuilder().addOptions(articles).setCustomId("admission_must_know_article").setPlaceholder(string.ARTICLES_LIST);
-      const readMoreButton = new ButtonBuilder().setLabel(string.READ_MORE).setStyle(ButtonStyle.Link).setURL(category.url);
+      const readMoreButton = new ButtonBuilder().setLabel(string.READ_MORE).setStyle(ButtonStyle.Link).setURL(readMoreUrl.substring(0, readMoreUrl.length - 4));
       const articleRow = new ActionRowBuilder().addComponents(articleMenu);
       const readMoreRow = new ActionRowBuilder().addComponents(readMoreButton);
       const categoryString = `**${category.name}**`;

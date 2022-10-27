@@ -106,7 +106,7 @@ telegramClient.on('callback_query', async (ctx) => {
       const articles = await getFeed(category.url);
       const stringHeader = `${string.ARTICLES_LIST}:\n\n`;
       const stringArticles = articles.items.map((article, index) => `${index + 1}. ${article.title}\n${article.link}\n\n`).join('');
-      const stringReadMore = `\n${string.READ_MORE}: ${category.url}`;
+      const stringReadMore = `\n${string.READ_MORE}: ${category.url.substring(0, category.url.length - 4)}`;
       await ctx.reply(stringHeader + stringArticles + stringReadMore);
     }
   });

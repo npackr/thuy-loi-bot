@@ -8,7 +8,7 @@ export async function telegramCommandRouter(bot, ctx, user, command) {
     case 'register':
       await register(bot, ctx, user); break;
     default:
-      ctx.reply('Command not found');
+      ctx.reply('Command not found'); 
       break;
   }
 }

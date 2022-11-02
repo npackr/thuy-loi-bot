@@ -3,7 +3,7 @@ import { fetchGraphQL } from "../../graphql/fetchGraphQL.js";
 export async function getCategories(commandId) {
   const operationsDoc = `
   query getCategories {
-    categories(where: {command: {_eq: ${commandId}}}) {
+    categories(order_by: {id: asc}, where: {command: {_eq: ${commandId}}}) {
       description
       id
       lang

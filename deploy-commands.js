@@ -20,7 +20,7 @@ import { getFeed } from "./src/functions/feed/parseFromUrl.js";
 import { getCommands } from "./src/functions/database/queries/common/getCommands.js";
 
 config();
-export const cooldownTime = 30000;
+export const cooldownTime = 20000;
 const LANGUAGE = "vi_VN";
 
 const discordClient = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent], 'partials': [Partials.Channel, Partials.Message] });

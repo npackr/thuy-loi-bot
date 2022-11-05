@@ -1,9 +1,8 @@
+import vnstr from "vn-str";
+
 export function checkBotInstructionConditions(messageContent) {
-  switch (messageContent) {
-    case 'dung lenh': return true;
-    case 'dùng lệnh': return true;
-    case 'dụng lệnh': return true;
-  default:
-    return false;
-  }
+  const botInstructionConditions = [ "dùng lệnh", "dụng lệnh", "xài lệnh" ];
+  const messageInLowerCase = messageContent.toLowerCase();
+  const messageInVnRmTones = vnstr.rmVnTones(messageInLowerCase);
+  return botInstructionConditions.some(condition => messageInLowerCase.includes(condition) || messageInVnRmTones.includes(condition));
 }

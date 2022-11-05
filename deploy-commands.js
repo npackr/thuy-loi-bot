@@ -2,7 +2,7 @@
 // 2022 - All rights reserved
 
 import { AttachmentBuilder, Client, GatewayIntentBits, Partials, REST, Routes } from "discord.js";
-import { config } from "dotenv";
+import { config } from "dotenv"; config();
 import { commandsRouter } from "./src/functions/commandsRouter.js";
 import { createCommandsList } from "./src/functions/createCommandsList.js";
 import { getConfigurations } from "./src/functions/database/queries/common/getConfigurations.js";
@@ -18,7 +18,6 @@ import { getCommands } from "./src/functions/database/queries/common/getCommands
 import { getConditionReplies } from "./src/functions/database/queries/common/getConditionReplies.js";
 import vnstr from "vn-str";
 
-config();
 export const cooldownTime = 20000;
 const LANGUAGE = "vi_VN";
 

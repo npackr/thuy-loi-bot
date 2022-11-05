@@ -57,9 +57,10 @@ discordClient.on('messageCreate', async message => {
   }
   const conditionReplies = await getConditionReplies();
   conditionReplies.forEach(async (conditionReply) => {
+    const messageContent = message.content.toLowerCase();
     const conditionInLowerCase = conditionReply.keyword.toLowerCase();
     const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
-    if (message.content.includes(conditionInLowerCase) || message.content.includes(conditionInRmVnTones)) {
+    if (messageContent.includes(conditionInLowerCase) || messageContent.includes(conditionInRmVnTones)) {
       return await message.reply(conditionReply.reply_details.content);
     };
   });
@@ -88,9 +89,10 @@ telegramClient.on('text', async (ctx) => {
 
   const conditionReplies = await getConditionReplies();
   conditionReplies.forEach(async (conditionReply) => {
+    const messageContent = ctx.message.text.toLowerCase();
     const conditionInLowerCase = conditionReply.keyword.toLowerCase();
     const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
-    if (ctx.message.text.includes(conditionInLowerCase) || ctx.message.text.includes(conditionInRmVnTones)) {
+    if (messageContent.includes(conditionInLowerCase) || messageContent.includes(conditionInRmVnTones)) {
       return await ctx.reply(conditionReply.reply_details.content);
     };
   });

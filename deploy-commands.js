@@ -18,6 +18,8 @@ import { Keyboard } from "telegram-keyboard";
 import { getMustKnowCategories } from "./src/functions/database/queries/common/admission/admission_must_know/getMustKnowCategories.js";
 import { getFeed } from "./src/functions/feed/parseFromUrl.js";
 import { getCommands } from "./src/functions/database/queries/common/getCommands.js";
+import { getConditionReplies } from "./src/functions/database/queries/common/getConditionReplies.js";
+import vnstr from "vn-str";
 
 config();
 export const cooldownTime = 20000;
@@ -57,15 +59,14 @@ discordClient.on('messageCreate', async message => {
     const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/find_out_em_gai_thuy_loi.jpg');
     await message.reply({ content: `${string.BOT_INSTRUCTION}`, files: [instructionImage] });
   }
-  if (checkAdmissionConditions(message.content) || message.content.includes('tuyển sinh') || message.content.includes('tuyen sinh')) {
-    return await message.reply({ content: `${string.ADMISSION_INSTRUCTION}` });
-  }
-  if (checkRegisterCondition(message.content) || message.content.includes("đăng ký") || message.content.includes("dang ky") || message.content.includes("nhập học") || message.content.includes("nhap hoc")) {
-    return await message.reply({ content: `${string.REGISTER_INSTRUCTION}` });
-  }
-  if (checkIndustriesConditions(message.content) || message.content.includes("nganh") || message.content.includes("ngành")) {
-    return await message.reply({ content: `${string.INDUSTRIES_INSTRUCTION}` });
-  }
+  const conditionReplies = await getConditionReplies();
+  conditionReplies.forEach(async (conditionReply) => {
+    const conditionInLowerCase = conditionReply.keyword.toLowerCase();
+    const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
+    if (message.content.includes(conditionInLowerCase) || message.content.includes(conditionInRmVnTones)) {
+      return await message.reply(conditionReply.reply_details.content);
+    };
+  });
 });
 
 const telegramCommands = await getCommands();
@@ -88,15 +89,15 @@ telegramClient.on('text', async (ctx) => {
       };
     });
   });
-  if (checkAdmissionConditions(ctx.message.text) || ctx.message.text === 'tuyển sinh' || ctx.message.text === 'tuyen sinh') {
-    await ctx.reply(string.ADMISSION_INSTRUCTION); return;
-  }
-  if (checkRegisterCondition(ctx.message.text) || ctx.message.text === 'đăng ký' || ctx.message.text === 'dang ky' || ctx.message.text === 'nhập học' || ctx.message.text === 'nhap hoc') {
-    await ctx.reply(string.REGISTER_INSTRUCTION); return;
-  }
-  if (checkIndustriesConditions(ctx.message.text) || ctx.message.text === 'nganh' || ctx.message.text === 'ngành') {
-    await ctx.reply(string.INDUSTRIES_INSTRUCTION); return;
-  }
+
+  const conditionReplies = await getConditionReplies();
+  conditionReplies.forEach(async (conditionReply) => {
+    const conditionInLowerCase = conditionReply.keyword.toLowerCase();
+    const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
+    if (ctx.message.text.includes(conditionInLowerCase) || ctx.message.text.includes(conditionInRmVnTones)) {
+      return await ctx.reply(conditionReply.reply_details.content);
+    };
+  });
 });
 
 telegramClient.on('callback_query', async (ctx) => {

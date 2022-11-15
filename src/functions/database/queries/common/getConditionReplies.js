@@ -3,7 +3,7 @@ import { fetchGraphQL } from "../../graphql/fetchGraphQL.js";
 export async function getConditionReplies() {
   const operationsDoc = `
   query getConditionReplies {
-    conditions {
+    conditions(order_by: {id: desc}) {
       keyword
       reply_details {
         content

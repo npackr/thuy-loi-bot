@@ -17,6 +17,7 @@ import { getFeed } from "./src/functions/feed/parseFromUrl.js";
 import { getCommands } from "./src/functions/database/queries/common/getCommands.js";
 import { getConditionReplies } from "./src/functions/database/queries/common/getConditionReplies.js";
 import vnstr from "vn-str";
+import { toDiscordTimestamp } from "./src/functions/functions/toDiscordTimestamp.js";
 
 export const cooldownTime = 20000;
 const LANGUAGE = "vi_VN";
@@ -25,7 +26,7 @@ const discordClient = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIn
 const telegramClient = new Telegraf(process.env.TELEGRAM_TOKEN);
 discordClient.login(process.env.DISCORD_TOKEN);
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
-const cooldown = new Set();
+const cooldown = new Map();
 let user = { language: LANGUAGE };
 let string = getString(user.language);
 rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: createCommandsList() });
@@ -33,20 +34,16 @@ discordClient.once('ready', () => { discordClient.user.setActivity(`V${process.e
 discordClient.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
   await interaction.deferReply({ ephemeral: true });
-  const configurations = await getConfigurations();
-  if (cooldown.has(interaction.user.id)) return interaction.editReply({
-    content: `${string.YOU_ARE_IN_COOLDOWN_PLEASE_WAIT} ${cooldownTime / 1000} ${string.SECONDS}`, ephemeral: true
-  });
+  if (cooldown.has(interaction.user.id)) {
+    interaction.editReply({
+      content: `${string.YOU_ARE_IN_COOLDOWN_PLEASE_WAIT} ${toDiscordTimestamp(new Date(cooldown.get(interaction.user.id) + cooldownTime), "R")}`, ephemeral: true
+    });
+    setTimeout(() => { executeDiscordCommand(interaction, user) }, cooldown.get(interaction.user.id) + cooldownTime - Date.now());
+    return;
+  }
   // REPLYING TO COMMANDS
-  cooldown.add(interaction.user.id); setTimeout(() => { cooldown.delete(interaction.user.id) }, cooldownTime);
-  await interaction.editReply({ content: string.LOADING_STRING, ephemeral: true });
-  if (interaction.commandName === 'register') {
-    const options = { configurations: configurations };
-    await commandsRouter("register", interaction, user, options);
-  }
-  if (interaction.commandName === 'addmission') {
-    await commandsRouter("admission", interaction, user);
-  }
+  cooldown.set(interaction.user.id, Date.now()); setTimeout(() => { cooldown.delete(interaction.user.id) }, cooldownTime);
+  executeDiscordCommand(interaction, user);
 });
 
 discordClient.on('messageCreate', async message => {
@@ -66,6 +63,20 @@ discordClient.on('messageCreate', async message => {
   });
 });
 
+async function executeDiscordCommand(interaction, user) {
+  const configurations = await getConfigurations();
+  if (interaction.commandName === 'register') {
+    const options = { configurations: configurations };
+    await commandsRouter("register", interaction, user, options);
+  }
+  if (interaction.commandName === 'addmission') {
+    await commandsRouter("admission", interaction, user);
+  }
+  if (interaction.commandName === 'reply') {
+    await commandsRouter("reply", interaction, user);
+  }
+}
+
 const telegramCommands = await getCommands();
 telegramCommands.forEach(command => {
   telegramClient.command(command.name, async (ctx) => {
@@ -74,6 +85,7 @@ telegramCommands.forEach(command => {
 });
 
 telegramClient.on('text', async (ctx) => {
+  if (ctx.message.from.is_bot) return;
   telegramCommands.forEach(async command => {
     const categories = await getCategories(command.id);
     categories.forEach(async (category) => {
@@ -81,7 +93,7 @@ telegramClient.on('text', async (ctx) => {
         if (category.id === 4) {
           const feedCategories = await getMustKnowCategories();
           const keyboard = feedCategories.map((c) => c.name);
-          await ctx.reply(`${string.SELECT_CATEGORIES}`, Keyboard.make(keyboard).inline());
+          return await ctx.reply(`${string.SELECT_CATEGORIES}`, Keyboard.make(keyboard).inline());
         } else { await ctx.reply(category.content); return; }
       };
     });

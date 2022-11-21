@@ -51,3 +51,5 @@ export const REMOVE_KEYWORD = "Xóa từ khóa";
 export const KEYWORD_HAS_BEEN_REMOVED = "Từ khóa đã được xóa!";
 export const TOO_LONG_STRING = "Chuỗi trả lời không được dài quá 2.000 ký tự!";
 export const YOU_ARE_NOT_A_MODERATOR = "Bạn cần thuộc Ban Điều hành để sử dụng lệnh này";
+export const DO_NOT_UNDESTAND = `Em Gái Thủy Lợi vẫn chưa hiểu ý của bạn, bạn có thể diễn đạt bằng cách khác được không? ^^`;
+export const PLEASE_TRY_AGAIN_OR_CONTACT_CS = `Vui lòng thử lại hoặc liên hệ CSKH để được hỗ trợ!`;

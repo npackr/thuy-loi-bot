@@ -18,6 +18,7 @@ import { getCommands } from "./src/functions/database/queries/common/getCommands
 import { getConditionReplies } from "./src/functions/database/queries/common/getConditionReplies.js";
 import vnstr from "vn-str";
 import { toDiscordTimestamp } from "./src/functions/functions/toDiscordTimestamp.js";
+import { getSimReply } from "./src/functions/database/queries/common/reply/simsimi.js";
 
 export const cooldownTime = 20000;
 const LANGUAGE = "vi_VN";
@@ -29,6 +30,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 const cooldown = new Map();
 let user = { language: LANGUAGE };
 let string = getString(user.language);
+let replied = false;
 rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: createCommandsList() });
 discordClient.once('ready', () => { discordClient.user.setActivity(`V${process.env.npm_package_version}`); discordClient.user.setStatus('online'); console.log("Discord Bot logged in successfully and waiting for commands!"); });
 discordClient.on('interactionCreate', async interaction => {
@@ -61,6 +63,8 @@ discordClient.on('messageCreate', async message => {
       return await message.reply(conditionReply.reply_details.content);
     };
   });
+
+  const simReply = await getSimReply(user, message.content); if (simReply) { return await message.reply(simReply); }
 });
 
 async function executeDiscordCommand(interaction, user) {
@@ -84,7 +88,23 @@ telegramCommands.forEach(command => {
   });
 });
 
+telegramClient.on('callback_query', async (ctx) => {
+  if (replied) return;
+  const feedCategories = await getMustKnowCategories();
+  feedCategories.forEach(async (category) => {
+    if (ctx.callbackQuery.data === category.name) {
+      const articles = await getFeed(category.url);
+      const stringHeader = `${string.ARTICLES_LIST}:\n\n`;
+      const stringArticles = articles.items.map((article, index) => `${index + 1}. ${article.title}\n${article.link}\n\n`).join('');
+      const stringReadMore = `\n${string.READ_MORE}: ${category.url.substring(0, category.url.length - 4)}`;
+      await ctx.reply(stringHeader + stringArticles + stringReadMore);
+      replied = true;
+    }
+  });
+});
+
 telegramClient.on('text', async (ctx) => {
+  if (replied) return;
   if (ctx.message.from.is_bot) return;
   telegramCommands.forEach(async command => {
     const categories = await getCategories(command.id);
@@ -93,8 +113,9 @@ telegramClient.on('text', async (ctx) => {
         if (category.id === 4) {
           const feedCategories = await getMustKnowCategories();
           const keyboard = feedCategories.map((c) => c.name);
-          return await ctx.reply(`${string.SELECT_CATEGORIES}`, Keyboard.make(keyboard).inline());
-        } else { await ctx.reply(category.content); return; }
+          await ctx.reply(`${string.SELECT_CATEGORIES}`, Keyboard.make(keyboard).inline());
+          replied = true;
+        } else { await ctx.reply(category.content); replied = true; return; }
       };
     });
   });
@@ -105,21 +126,10 @@ telegramClient.on('text', async (ctx) => {
     const conditionInLowerCase = conditionReply.keyword.toLowerCase();
     const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
     if (messageContent.includes(conditionInLowerCase) || messageContent.includes(conditionInRmVnTones)) {
-      return await ctx.reply(conditionReply.reply_details.content);
+      if (replied) return;
+      await ctx.reply(conditionReply.reply_details.content);
+      replied = true;
     };
-  });
-});
-
-telegramClient.on('callback_query', async (ctx) => {
-  const feedCategories = await getMustKnowCategories();
-  feedCategories.forEach(async (category) => {
-    if (ctx.callbackQuery.data === category.name) {
-      const articles = await getFeed(category.url);
-      const stringHeader = `${string.ARTICLES_LIST}:\n\n`;
-      const stringArticles = articles.items.map((article, index) => `${index + 1}. ${article.title}\n${article.link}\n\n`).join('');
-      const stringReadMore = `\n${string.READ_MORE}: ${category.url.substring(0, category.url.length - 4)}`;
-      await ctx.reply(stringHeader + stringArticles + stringReadMore);
-    }
   });
 });
 

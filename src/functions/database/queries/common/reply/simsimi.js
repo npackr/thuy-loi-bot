@@ -21,7 +21,11 @@ export async function getSimReply(userLanguage, userMessage) {
   message = message.replace("em gái thủy lợi", "sim");
   const data = await got.get(apiURL + "?lc=" + lang + "&text=" + message).json();
   let reply = data.message;
-  if (vnstr.hasOffensiveWords(reply)) return `${string.CAN_NOT_REPLY_YOUR_QUESTION}, ${string.HELP_YOU_TO_SEARCH_ON_GOOGLE}:\nhttps://www.google.com/search?q=${message}`;
+  if (vnstr.hasOffensiveWords(reply)) 
+  {
+    let searchQuery = message.replace(" ", "+");
+    return `${string.CAN_NOT_REPLY_YOUR_QUESTION}. ${string.HELP_YOU_TO_SEARCH_ON_GOOGLE}:\nhttps://www.google.com/search?q=${searchQuery}`;
+  }
   if (data.status == "success") {
     reply = reply.replace("sim", " Em Gái Thủy Lợi ");
     reply = reply.replace("Sim", " Em Gái Thủy Lợi ");
@@ -47,7 +51,7 @@ async function getBadScore(lang, message) {
 
 function removeBadWords(string) {
   let message = string;
-  const badWords = ["Mẹ", "Cmm", "Đm", "Ra", "Bj", "Cần Sa", "Xxx"];
+  const badWords = ["Mẹ", "Cmm", "Đm", "Ra", "Bj", "Cần Sa", "Xxx", "Mông", "Cắn", "Cha"];
   badWords.forEach(word => {
     if (message.includes(word)) message = message.replace(word, "");
     if (message.includes(word.toUpperCase())) message = message.replace(word.toUpperCase(), "");

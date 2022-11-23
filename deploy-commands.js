@@ -28,11 +28,14 @@ const telegramClient = new Telegraf(process.env.TELEGRAM_TOKEN);
 discordClient.login(process.env.DISCORD_TOKEN);
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 const cooldown = new Map();
+const prefix = "em ơi";
 let user = { language: LANGUAGE };
 let string = getString(user.language);
 let replied = false;
 rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: createCommandsList() });
 discordClient.once('ready', () => { discordClient.user.setActivity(`V${process.env.npm_package_version}`); discordClient.user.setStatus('online'); console.log("Discord Bot logged in successfully and waiting for commands!"); });
+
+/* DISCORD COMMANDS */
 discordClient.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
   await interaction.deferReply({ ephemeral: true });
@@ -48,25 +51,43 @@ discordClient.on('interactionCreate', async interaction => {
   executeDiscordCommand(interaction, user);
 });
 
+/* DISCORD MESSAGES TRIGGER */
 discordClient.on('messageCreate', async message => {
   if (message.author.bot) return;
+
+  // USER INSTRUCTIONS
   if (message.mentions.has(discordClient.user) || checkBotInstructionConditions(message.content)) {
     const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/find_out_em_gai_thuy_loi.jpg');
-    await message.reply({ content: `${string.BOT_INSTRUCTION}`, files: [instructionImage] });
+    return await message.reply({ content: `${string.BOT_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`, files: [instructionImage] });
   }
+
+  // CONDITION REPLY
   const conditionReplies = await getConditionReplies();
   conditionReplies.forEach(async (conditionReply) => {
     const messageContent = message.content.toLowerCase();
     const conditionInLowerCase = conditionReply.keyword.toLowerCase();
     const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
     if (messageContent.includes(conditionInLowerCase) || messageContent.includes(conditionInRmVnTones)) {
+      replied = true;
       return await message.reply(conditionReply.reply_details.content);
     };
   });
+  if (replied) return;
 
-  const simReply = await getSimReply(user, message.content); if (simReply) { return await message.reply(simReply); }
+  // SIM REPLY
+  const messageContent = message.content.toLowerCase();
+  if (messageContent.startsWith(prefix) || messageContent.startsWith(vnstr.rmVnTones(prefix))) {
+    if (messageContent.length > 99) { return await message.reply(string.MESSAGE_TOO_LONG); }
+    const simReply = await getSimReply(user, messageContent.substring(6, 99));
+    if (simReply) { return await message.reply(simReply); }
+  } else {
+    // NORMAL REPLY
+    const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/find_out_em_gai_thuy_loi.jpg');
+    return await message.reply({ content: `${string.BOT_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`, files: [instructionImage] });
+  }
 });
 
+/* DISCORD COMMAND EXECUTION */
 async function executeDiscordCommand(interaction, user) {
   const configurations = await getConfigurations();
   if (interaction.commandName === 'register') {
@@ -81,15 +102,14 @@ async function executeDiscordCommand(interaction, user) {
   }
 }
 
+/* TELEGRAM COMMANDS */
 const telegramCommands = await getCommands();
 telegramCommands.forEach(command => {
-  telegramClient.command(command.name, async (ctx) => {
-    await telegramCommandRouter(telegramClient, ctx, user, command.name);
-  });
+  telegramClient.command(command.name, async (ctx) => { await telegramCommandRouter(telegramClient, ctx, user, command.name); replied = true; return; });
 });
 
+/* TELEGRAM QUERIES TRIGGER */
 telegramClient.on('callback_query', async (ctx) => {
-  if (replied) return;
   const feedCategories = await getMustKnowCategories();
   feedCategories.forEach(async (category) => {
     if (ctx.callbackQuery.data === category.name) {
@@ -97,14 +117,13 @@ telegramClient.on('callback_query', async (ctx) => {
       const stringHeader = `${string.ARTICLES_LIST}:\n\n`;
       const stringArticles = articles.items.map((article, index) => `${index + 1}. ${article.title}\n${article.link}\n\n`).join('');
       const stringReadMore = `\n${string.READ_MORE}: ${category.url.substring(0, category.url.length - 4)}`;
-      await ctx.reply(stringHeader + stringArticles + stringReadMore);
-      replied = true;
+      await ctx.reply(stringHeader + stringArticles + stringReadMore); replied = true; return;
     }
   });
 });
 
+/* TELEGRAM MESSAGES TRIGGER */
 telegramClient.on('text', async (ctx) => {
-  if (replied) return;
   if (ctx.message.from.is_bot) return;
   telegramCommands.forEach(async command => {
     const categories = await getCategories(command.id);
@@ -115,22 +134,36 @@ telegramClient.on('text', async (ctx) => {
           const keyboard = feedCategories.map((c) => c.name);
           await ctx.reply(`${string.SELECT_CATEGORIES}`, Keyboard.make(keyboard).inline());
           replied = true;
-        } else { await ctx.reply(category.content); replied = true; return; }
+          return;
+        } else { await ctx.reply(category.content); return; }
       };
     });
   });
+  if (replied) return;
 
+  // CONDITION REPLIES
   const conditionReplies = await getConditionReplies();
   conditionReplies.forEach(async (conditionReply) => {
     const messageContent = ctx.message.text.toLowerCase();
     const conditionInLowerCase = conditionReply.keyword.toLowerCase();
     const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
     if (messageContent.includes(conditionInLowerCase) || messageContent.includes(conditionInRmVnTones)) {
-      if (replied) return;
-      await ctx.reply(conditionReply.reply_details.content);
-      replied = true;
+      await ctx.reply(conditionReply.reply_details.content); replied = true; return;
     };
   });
+  if (replied) return;
+
+  // NORMAL REPLY
+  const messageContent = ctx.message.text.toLowerCase();
+  /// SIM REPLY
+  if (messageContent.startsWith(prefix) || messageContent.startsWith(vnstr.rmVnTones(prefix))) {
+    if (messageContent.length > 99) { await ctx.reply(string.MESSAGE_TOO_LONG); return; }
+    const simReply = await getSimReply(user, messageContent.substring(6, 99));
+    if (simReply) { await ctx.reply(simReply); return; }
+  } else {
+    // INSTRUCTION REPLY
+    await ctx.reply(`${string.BOT_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}`);
+  }
 });
 
 telegramClient.launch().then(() => console.log('Telegram Bot logged in and waiting for commands!'));

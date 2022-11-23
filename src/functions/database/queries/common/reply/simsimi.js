@@ -47,7 +47,7 @@ async function getBadScore(lang, message) {
 
 function removeBadWords(string) {
   let message = string;
-  const badWords = ["Mẹ", "Cmm", "Đm", "Ra", "Bj", "Cần Sa"];
+  const badWords = ["Mẹ", "Cmm", "Đm", "Ra", "Bj", "Cần Sa", "Xxx"];
   badWords.forEach(word => {
     if (message.includes(word)) message = message.replace(word, "");
     if (message.includes(word.toUpperCase())) message = message.replace(word.toUpperCase(), "");

@@ -162,7 +162,7 @@ telegramClient.on('text', async (ctx) => {
     if (simReply) { await ctx.reply(simReply); return; }
   } else {
     // INSTRUCTION REPLY
-    await ctx.reply(`${string.BOT_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`);
+    await ctx.reply(`${string.TELEGRAM_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`);
   }
 });
 

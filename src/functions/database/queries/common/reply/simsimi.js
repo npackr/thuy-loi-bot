@@ -14,6 +14,7 @@ export async function getSimReply(userLanguage, userMessage) {
     case "zh_CN": lang = "ch"; break;
     default: lang = "vn"; break;
   }
+  if (userMessage.length == 0) return string.PLEASE_LET_ME_KNOW_WHAT_YOU_WANT_TO_SAY;
   if (vnstr.hasOffensiveWords(message)) return string.DO_NOT_UNDESTAND;
   const badScore = await getBadScore(lang, message); console.log(badScore); if (badScore.bad > 0.3) return string.DO_NOT_UNDESTAND;
   const apiURL = `https://simsimi.info/api/`;
@@ -51,7 +52,9 @@ async function getBadScore(lang, message) {
 
 function removeBadWords(string) {
   let message = string;
-  const badWords = ["Mẹ", "Cmm", "Đm", "Ra", "Bj", "Cần Sa", "Xxx", "Mông", "Cắn", "Cha"];
+  const badWords = [
+    "Mẹ", "Cmm", "Đm", "Ra", "Bj", "Cần Sa", "Xxx", "Mông", "Cắn", "Cha",
+    "Chó", "Đụ", "Đéo", "Địt"];
   badWords.forEach(word => {
     if (message.includes(word)) message = message.replace(word, "");
     if (message.includes(word.toUpperCase())) message = message.replace(word.toUpperCase(), "");

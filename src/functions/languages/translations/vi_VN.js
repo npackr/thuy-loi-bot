@@ -1,4 +1,5 @@
 export const ADMIN_ID = "336096287407472641";
+export const TELEGARM_BOT_USERNAME = "@emgaithuyloi_bot";
 export const SUCCESSFUL_ICON = "✅";
 export const ERROR_ICON = "❌";
 export const SCHOOL_LOGO = "<:tls_logo:1028356562537951252>";
@@ -23,7 +24,7 @@ export const TELEGRAM_INSTRUCTION = `Để thông qua Em Gái Thủy Lợi tra c
 export const YOU_CAN_DIRECTLY_ASKING_FOR = "Bạn cũng có thể trực tiếp hỏi Em Gái Thủy lợi. Sau đây là ví dụ các câu hỏi bạn có thể thử:\n - Căn tin trường mình ở đâu?\n - Ngành công nghệ thông tin của trường mình thế nào?\n - Trường mình có những ngành nào?\n - Mã trường mình là gì?\n - Em có thể gửi xe ở đâu khi đến trường?\n - ...";
 export const OR_YOU_CAN_ASK_EVERYTHING_BY = "Hoặc bạn cũng có thể tán gẫu với Em Gái Thủy Lợi bằng bất cứ vấn đề nào. Ví dụ: Em ơi, em ăn cơm chưa?; Em ơi, làm sao để đậu đại học?; Em ơi, ..."
 export const CAN_NOT_REPLY_YOUR_QUESTION = "Em Gái Thủy Lợi hiện chưa thể trả lời câu hỏi này";
-export const PLEASE_LET_KNOW_WHAT_YOU_WANT_TO_SAY = "Vui lòng cho Em Gái Thủy Lợi biết bạn muốn nói gì. Ví dụ: Em ơi, anh muốn học thật giỏi,...";
+export const PLEASE_LET_ME_KNOW_WHAT_YOU_WANT_TO_SAY = "Vui lòng cho Em Gái Thủy Lợi biết bạn muốn nói gì. Ví dụ: Em ơi, anh muốn học thật giỏi,...";
 export const HELP_YOU_TO_SEARCH_ON_GOOGLE = "Tuy nhiên, Em Gái Thủy Lợi đã giúp bạn tìm kiếm thông tin trên Google, hi vọng nó hữu ích";
 export const ADMISSION_INSTRUCTION = "Để xem thông tin tuyển sinh của Phân hiệu Đại học Thủy lợi bạn có thể sử dụng lệnh ` /admission ` của Em Gái Thủy Lợi hoặc truy cập trang thông tin tuyển sinh: https://tlus.edu.vn/tuyen-sinh";
 export const REGISTER_INSTRUCTION = "Để đăng ký nhập học của Phân hiệu Đại học Thủy lợi bạn có thể sử dụng lệnh ` /register ` của Em Gái Thủy Lợi hoặc truy cập trang đăng ký nhập học: https://nhaphoc.tlus.edu.vn";

@@ -126,7 +126,6 @@ telegramClient.on('callback_query', async (ctx) => {
 /* TELEGRAM MESSAGES TRIGGER */
 telegramClient.on('text', async (ctx) => {
   if (ctx.message.from.is_bot) return;
-  if (ctx.message.chat.type === "supergroup" & !ctx.message.text.toLowerCase().includes(string.TELEGARM_BOT_USERNAME)) return;
   telegramCommands.forEach(async command => {
     const categories = await getCategories(command.id);
     categories.forEach(async (category) => {
@@ -156,6 +155,7 @@ telegramClient.on('text', async (ctx) => {
   if (replied) return;
 
   // NORMAL REPLY
+  if (ctx.message.chat.type === "supergroup" & !ctx.message.text.toLowerCase().includes(string.TELEGARM_BOT_USERNAME)) return;
   const messageContent = ctx.message.text.includes(string.TELEGARM_BOT_USERNAME) ? ctx.message.text.replace(string.TELEGARM_BOT_USERNAME, "").toLowerCase() : ctx.message.text.toLowerCase();
   /// SIM REPLY
   if (messageContent.trim().startsWith(prefix) || messageContent.trim().startsWith(vnstr.rmVnTones(prefix))) {

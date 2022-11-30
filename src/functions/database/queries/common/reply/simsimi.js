@@ -21,9 +21,9 @@ export async function getSimReply(userLanguage, userMessage) {
   message = message.replace("em gái thủy lợi", "sim");
   const data = await got.get(apiURL + "?lc=" + lang + "&text=" + message).json();
   let reply = data.message;
-  if (vnstr.hasOffensiveWords(reply)) 
-  {
-    let searchQuery = message.replace(" ", "+");
+  if (vnstr.hasOffensiveWords(reply)) {
+    let searchQuery = message.startsWith(" ") ? message.replace(" ", "") : message;
+    do { searchQuery = searchQuery.replace(" ", "+"); } while (searchQuery.includes(" "));
     return `${string.CAN_NOT_REPLY_YOUR_QUESTION}. ${string.HELP_YOU_TO_SEARCH_ON_GOOGLE}:\nhttps://www.google.com/search?q=${searchQuery}`;
   }
   if (data.status == "success") {

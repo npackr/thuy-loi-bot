@@ -18,8 +18,8 @@ export async function getSimReply(userLanguage, userMessage) {
   if (vnstr.hasOffensiveWords(message)) return string.DO_NOT_UNDESTAND;
   const badScore = await getBadScore(lang, message); console.log(badScore); if (badScore.bad > 0.3) return string.DO_NOT_UNDESTAND;
   const apiURL = `https://simsimi.info/api/`;
-  message = message.replace("Em Gái Thủy Lợi", "sim");
-  message = message.replace("em gái thủy lợi", "sim");
+  message = message.replaceAll("Em Gái Thủy Lợi", "sim");
+  message = message.replaceAll("em gái thủy lợi", "sim");
   const data = await got.get(apiURL + "?lc=" + lang + "&text=" + message).json();
   let reply = data.message;
   if (vnstr.hasOffensiveWords(reply)) {
@@ -28,12 +28,12 @@ export async function getSimReply(userLanguage, userMessage) {
     return `${string.CAN_NOT_REPLY_YOUR_QUESTION}. ${string.HELP_YOU_TO_SEARCH_ON_GOOGLE}:\nhttps://www.google.com/search?q=${searchQuery}`;
   }
   if (data.status == "success") {
-    reply = reply.replace("sim", " Em Gái Thủy Lợi ");
-    reply = reply.replace("Sim", " Em Gái Thủy Lợi ");
-    reply = reply.replace("SIM", " Em Gái Thủy Lợi ");
-    reply = reply.replace("simsimi", " Em Gái Thủy Lợi ");
-    reply = reply.replace("Simsimi", " Em Gái Thủy Lợi ");
-    reply = reply.replace("SIMSIMI", " Em Gái Thủy Lợi ");
+    reply = reply.replaceAll("sim", " Em Gái Thủy Lợi ");
+    reply = reply.replaceAll("Sim", " Em Gái Thủy Lợi ");
+    reply = reply.replaceAll("SIM", " Em Gái Thủy Lợi ");
+    reply = reply.replaceAll("simsimi", " Em Gái Thủy Lợi ");
+    reply = reply.replaceAll("Simsimi", " Em Gái Thủy Lợi ");
+    reply = reply.replaceAll("SIMSIMI", " Em Gái Thủy Lợi ");
     reply = removeBadWords(reply);
     return reply;
   }
@@ -54,15 +54,15 @@ function removeBadWords(string) {
   let message = string;
   const badWords = [
     "Mẹ", "Cmm", "Đm", "Ra", "Bj", "Cần Sa", "Xxx", "Mông", "Cắn", "Cha",
-    "Chó", "Đụ", "Đéo", "Địt"];
+    "Chó", "Đụ", "Đéo", "Địt", "Bú", "Nút"];
   badWords.forEach(word => {
-    if (message.includes(word)) message = message.replace(word, "");
-    if (message.includes(word.toUpperCase())) message = message.replace(word.toUpperCase(), "");
-    if (message.includes(word.toLowerCase())) message = message.replace(word.toLowerCase(), "");
+    if (message.includes(word)) message = message.replaceAll(word, "");
+    if (message.includes(word.toUpperCase())) message = message.replaceAll(word.toUpperCase(), "");
+    if (message.includes(word.toLowerCase())) message = message.replaceAll(word.toLowerCase(), "");
   });
-  message = message.replace(" m ", " b "); message.replace(" t ", " m ");
-  message = message.replace(" T ", " M "); message.replace(" M ", " B ");
-  message = message.replace("mày", "bạn"); message.replace("Mày", "Bạn");
-  message = message.replace("tao", "mình"); message.replace("Tao", "Mình");
+  message = message.replaceAll(" m ", " b "); message.replaceAll(" t ", " m ");
+  message = message.replaceAll(" T ", " M "); message.replaceAll(" M ", " B ");
+  message = message.replaceAll("mày", "bạn"); message.replaceAll("Mày", "Bạn");
+  message = message.replaceAll("tao", "mình"); message.replaceAll("Tao", "Mình");
   return message;
 }

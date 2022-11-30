@@ -126,7 +126,7 @@ telegramClient.on('callback_query', async (ctx) => {
 /* TELEGRAM MESSAGES TRIGGER */
 telegramClient.on('text', async (ctx) => {
   if (ctx.message.from.is_bot) return;
-  if (ctx.message.chat.type === "group" & !ctx.message.text.toLowerCase().includes(string.TELEGARM_BOT_USERNAME)) return;
+  if (ctx.message.chat.type === "supergroup" & !ctx.message.text.toLowerCase().includes(string.TELEGARM_BOT_USERNAME)) return;
   telegramCommands.forEach(async command => {
     const categories = await getCategories(command.id);
     categories.forEach(async (category) => {
@@ -158,7 +158,7 @@ telegramClient.on('text', async (ctx) => {
   // NORMAL REPLY
   const messageContent = ctx.message.text.includes(string.TELEGARM_BOT_USERNAME) ? ctx.message.text.replace(string.TELEGARM_BOT_USERNAME, "").toLowerCase() : ctx.message.text.toLowerCase();
   /// SIM REPLY
-  if (messageContent.startsWith(prefix) || messageContent.startsWith(vnstr.rmVnTones(prefix))) {
+  if (messageContent.trim().startsWith(prefix) || messageContent.trim().startsWith(vnstr.rmVnTones(prefix))) {
     if (messageContent.length > 99) { await ctx.reply(string.MESSAGE_TOO_LONG); return; }
     if (messageContent.length < 6) { await ctx.reply(string.PLEASE_LET_ME_KNOW_WHAT_YOU_WANT_TO_SAY); return; }
     const simReply = await getSimReply(user, messageContent.substring(6, 99));

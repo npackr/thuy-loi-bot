@@ -31,7 +31,7 @@ const cooldown = new Map();
 const prefix = "em ơi";
 let user = { language: LANGUAGE };
 let string = getString(user.language);
-let replied = false;
+ 
 rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: createCommandsList() });
 discordClient.once('ready', () => { discordClient.user.setActivity(`V${process.env.npm_package_version}`); discordClient.user.setStatus('online'); console.log("Discord Bot logged in successfully and waiting for commands!"); });
 
@@ -126,6 +126,7 @@ telegramClient.on('callback_query', async (ctx) => {
 /* TELEGRAM MESSAGES TRIGGER */
 telegramClient.on('text', async (ctx) => {
   if (ctx.message.from.is_bot) return;
+  let replied = false;
   telegramCommands.forEach(async command => {
     const categories = await getCategories(command.id);
     categories.forEach(async (category) => {
@@ -140,19 +141,20 @@ telegramClient.on('text', async (ctx) => {
       };
     });
   });
-  if (replied) return;
+  if (replied) return replied = false;
 
   // CONDITION REPLIES
   const conditionReplies = await getConditionReplies();
-  conditionReplies.forEach(async (conditionReply) => {
+  for (let i = 0; i < conditionReplies.length; i++) {
+    const conditionReply = conditionReplies[i];
     const messageContent = ctx.message.text.toLowerCase();
     const conditionInLowerCase = conditionReply.keyword.toLowerCase();
     const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
     if (messageContent.includes(conditionInLowerCase) || messageContent.includes(conditionInRmVnTones)) {
       await ctx.reply(conditionReply.reply_details.content); replied = true; return;
     };
-  });
-  if (replied) return;
+  };
+  if (replied) return replied = false;
 
   // NORMAL REPLY
   if (ctx.message.chat.type === "supergroup" & !ctx.message.text.toLowerCase().includes(string.TELEGARM_BOT_USERNAME)) return;
@@ -163,10 +165,13 @@ telegramClient.on('text', async (ctx) => {
     if (messageContent.length < 6) { await ctx.reply(string.PLEASE_LET_ME_KNOW_WHAT_YOU_WANT_TO_SAY); return; }
     const simReply = await getSimReply(user, messageContent.substring(6, 99));
     if (simReply) { await ctx.reply(simReply); return; }
-  } else {
-    // INSTRUCTION REPLY
-    await ctx.reply(`${string.TELEGRAM_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`);
+    replied = true; return;
   }
+  if (replied) return replied = false;
+
+  console.log(replied);
+  // INSTRUCTION REPLY
+  await ctx.reply(`${string.TELEGRAM_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`); return;
 });
 
 telegramClient.launch().then(() => console.log('Telegram Bot logged in and waiting for commands!'));

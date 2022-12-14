@@ -54,6 +54,7 @@ discordClient.on('interactionCreate', async interaction => {
 /* DISCORD MESSAGES TRIGGER */
 discordClient.on('messageCreate', async message => {
   if (message.author.bot) return;
+  let replied = false;
 
   // USER INSTRUCTIONS
   if (message.mentions.has(discordClient.user) || checkBotInstructionConditions(message.content)) {
@@ -63,7 +64,7 @@ discordClient.on('messageCreate', async message => {
 
   // CONDITION REPLY
   const conditionReplies = await getConditionReplies();
-  conditionReplies.forEach(async (conditionReply) => {
+  for (const conditionReply of conditionReplies) {
     const messageContent = message.content.toLowerCase();
     const conditionInLowerCase = conditionReply.keyword.toLowerCase();
     const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
@@ -71,7 +72,16 @@ discordClient.on('messageCreate', async message => {
       replied = true;
       return await message.reply(conditionReply.reply_details.content);
     };
-  });
+  }
+  // conditionReplies.forEach(async (conditionReply) => {
+  //   const messageContent = message.content.toLowerCase();
+  //   const conditionInLowerCase = conditionReply.keyword.toLowerCase();
+  //   const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
+  //   if (messageContent.includes(conditionInLowerCase) || messageContent.includes(conditionInRmVnTones)) {
+  //     replied = true;
+  //     return await message.reply(conditionReply.reply_details.content);
+  //   };
+  // });
   if (replied) return;
 
   // SIM REPLY

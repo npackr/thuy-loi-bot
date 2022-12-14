@@ -88,7 +88,7 @@ discordClient.on('messageCreate', async message => {
   const messageContent = message.content.toLowerCase();
   if (messageContent.startsWith(prefix) || messageContent.startsWith(vnstr.rmVnTones(prefix))) {
     if (messageContent.length > 99) { return await message.reply(string.MESSAGE_TOO_LONG); }
-    if (messageContent.length < 6) { await ctx.reply(string.PLEASE_LET_KNOW_WHAT_YOU_WANT_TO_SAY); return; }
+    if (messageContent.length < 6) { await ctx.reply(string.PLEASE_LET_ME_KNOW_WHAT_YOU_WANT_TO_SAY); return; }
     const simReply = await getSimReply(user, messageContent.substring(6, 99));
     if (simReply) { return await message.reply(simReply); }
   } else {

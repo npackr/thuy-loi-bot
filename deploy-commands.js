@@ -28,21 +28,21 @@ const telegramClient = new Telegraf(process.env.TELEGRAM_TOKEN);
 discordClient.login(process.env.DISCORD_TOKEN);
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 const cooldown = new Map();
-const prefix = "em ơi";
 let user = { language: LANGUAGE };
 let string = getString(user.language);
- 
+const prefix = string.BOT_BUZZ_WORD;
+
 rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: createCommandsList() });
 discordClient.once('ready', () => { discordClient.user.setActivity(`V${process.env.npm_package_version}`); discordClient.user.setStatus('online'); console.log("Discord Bot logged in successfully and waiting for commands!"); });
+
+let replied = false;
 
 /* DISCORD COMMANDS */
 discordClient.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
   await interaction.deferReply({ ephemeral: true });
   if (cooldown.has(interaction.user.id)) {
-    interaction.editReply({
-      content: `${string.YOU_ARE_IN_COOLDOWN_PLEASE_WAIT} ${toDiscordTimestamp(new Date(cooldown.get(interaction.user.id) + cooldownTime), "R")}`, ephemeral: true
-    });
+    interaction.editReply({ content: `${string.YOU_ARE_IN_COOLDOWN_PLEASE_WAIT} ${toDiscordTimestamp(new Date(cooldown.get(interaction.user.id) + cooldownTime), "R")}`, ephemeral: true });
     setTimeout(() => { executeDiscordCommand(interaction, user) }, cooldown.get(interaction.user.id) + cooldownTime - Date.now());
     return;
   }
@@ -53,8 +53,9 @@ discordClient.on('interactionCreate', async interaction => {
 
 /* DISCORD MESSAGES TRIGGER */
 discordClient.on('messageCreate', async message => {
+  if (cooldown.has(message.author.id)) { return await message.reply({ content: `${string.DO_NOT_TALK_TO_FAST}`, ephemeral: true });}
   if (message.author.bot) return;
-  let replied = false;
+  cooldown.set(message.author.id, Date.now()); setTimeout(() => { cooldown.delete(message.author.id) }, cooldownTime);
 
   // USER INSTRUCTIONS
   if (message.mentions.has(discordClient.user) || checkBotInstructionConditions(message.content)) {
@@ -73,15 +74,6 @@ discordClient.on('messageCreate', async message => {
       return await message.reply(conditionReply.reply_details.content);
     };
   }
-  // conditionReplies.forEach(async (conditionReply) => {
-  //   const messageContent = message.content.toLowerCase();
-  //   const conditionInLowerCase = conditionReply.keyword.toLowerCase();
-  //   const conditionInRmVnTones = vnstr.rmVnTones(conditionInLowerCase);
-  //   if (messageContent.includes(conditionInLowerCase) || messageContent.includes(conditionInRmVnTones)) {
-  //     replied = true;
-  //     return await message.reply(conditionReply.reply_details.content);
-  //   };
-  // });
   if (replied) return;
 
   // SIM REPLY
@@ -121,6 +113,8 @@ telegramCommands.forEach(command => {
 
 /* TELEGRAM QUERIES TRIGGER */
 telegramClient.on('callback_query', async (ctx) => {
+  if (cooldown.has(ctx.from.id)) { return await ctx.reply(`${string.DO_NOT_TALK_TO_FAST}`); }
+  cooldown.set(ctx.from.id, Date.now()); setTimeout(() => { cooldown.delete(ctx.from.id) }, cooldownTime);
   const feedCategories = await getMustKnowCategories();
   feedCategories.forEach(async (category) => {
     if (ctx.callbackQuery.data === category.name) {
@@ -136,7 +130,8 @@ telegramClient.on('callback_query', async (ctx) => {
 /* TELEGRAM MESSAGES TRIGGER */
 telegramClient.on('text', async (ctx) => {
   if (ctx.message.from.is_bot) return;
-  let replied = false;
+  if (cooldown.has(ctx.from.id)) { return await ctx.reply(`${string.DO_NOT_TALK_TO_FAST}`); }
+  cooldown.set(ctx.from.id, Date.now()); setTimeout(() => { cooldown.delete(ctx.from.id) }, cooldownTime);
   telegramCommands.forEach(async command => {
     const categories = await getCategories(command.id);
     categories.forEach(async (category) => {
@@ -179,7 +174,6 @@ telegramClient.on('text', async (ctx) => {
   }
   if (replied) return replied = false;
 
-  console.log(replied);
   // INSTRUCTION REPLY
   await ctx.reply(`${string.TELEGRAM_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`); return;
 });

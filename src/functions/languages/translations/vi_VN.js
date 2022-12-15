@@ -1,12 +1,14 @@
 export const ADMIN_ID = "336096287407472641";
 export const TELEGARM_BOT_USERNAME = "@emgaithuyloi_bot";
 export const BOT_NAME = "Thủy Lợi";
+export const BOT_BUZZ_WORD = "Thủy Lợi ơi";
 export const SUCCESSFUL_ICON = "✅";
 export const ERROR_ICON = "❌";
 export const SCHOOL_LOGO = "<:tls_logo:1028356562537951252>";
 export const LOADING_STRING = `${SCHOOL_LOGO}  Đang xử lý yêu cầu của bạn, vui lòng đợi...`;
 export const SOMETHING_WHEN_WRONG = "Có gì đó không đúng đã xảy ra, hãy thử liên hệ Điều hành viên";
 export const FEATURE_ARE_IN_DEVELOPMENT = "Chức năng này đang được phát triển, vui lòng quay lại sau!";
+export const DO_NOT_TALK_TO_FAST = `Hãy nói chậm hơn, ${BOT_NAME} nghe không kịp nè~`;
 export const SCHOOL_NAME = "Phân hiệu Trường Đại học Thủy lợi";
 export const YOU_ARE_IN_COOLDOWN_PLEASE_WAIT = "Vui lòng chờ hoàn thành lệnh hiện tại trước khi bắt đầu lệnh mới!\nThời gian chờ thực hiện lệnh dự kiến: ";
 export const SECONDS = "giây";

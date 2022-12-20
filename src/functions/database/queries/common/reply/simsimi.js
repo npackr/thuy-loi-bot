@@ -3,11 +3,10 @@ import { config } from 'dotenv';
 import vnstr from "vn-str";
 import { getString } from '../../../../languages/stringRouter.js';
 config();
-const preferAPI = "premium"; // premium or free
 const badWords = [
   "Mẹ", "Cmm", "Đm", "Ra", "Bj", "Cần Sa", "Xxx", "Mông", "Cắn", "Cha",
   "Chó", "Đụ", "Đéo", "Địt", "Bú", "Nút", "Bắn", "Phịch", "Lồn", "Cặc",
-  "Má", "Bố",
+  "Má", "Bố", "Gay"
 ];
 
 export async function getSimReply(userLanguage, userMessage) {
@@ -26,9 +25,16 @@ export async function getSimReply(userLanguage, userMessage) {
   const includeBadWords = badWords.some(word => message.includes(word) || message.includes(word.toUpperCase()) || message.includes(word.toLowerCase())); if (includeBadWords) return string.PLEASE_WATCH_YOUR_LANGUAGE;
   message = message.replaceAll(string.BOT_NAME, "sim"); message = message.replaceAll(string.BOT_NAME.toLowerCase(), "sim");
 
+  const reply = await getReplyFromAPI("premium", lang, message);
+  if (reply === string.SOMETHING_WHEN_WRONG) return await getReplyFromAPI("free", lang, message)
+  else return reply;
+}
+
+async function getReplyFromAPI(preferAPI, lang, message) {
+  const string = getString(lang);
   if (preferAPI == "free") {
     const data = await getFreeSimReply(lang, message); let reply = data.response;
-    if (data.status == "success") { reply = replaceAllSimWithBotName(reply, string.BOT_NAME); reply = removeBadWords(reply);  return reply; }
+    if (data.status == "success") { reply = replaceAllSimWithBotName(reply, string.BOT_NAME); reply = removeBadWords(reply); return reply; }
     else if (data.status == "false - 1" || data.status == "false - 2" || data.status == "false - 3") { return string.DO_NOT_UNDESTAND; }
     else return string.SOMETHING_WHEN_WRONG;
   }

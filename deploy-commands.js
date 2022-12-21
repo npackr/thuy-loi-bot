@@ -86,7 +86,7 @@ discordClient.on('messageCreate', async message => {
     if (simReply) { return await message.reply(simReply); }
   } else {
     // NORMAL REPLY
-    const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/discord_instruction.png.jpg');
+    const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/discord_instruction.png');
     return await message.reply({ content: `${string.BOT_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`, files: [instructionImage] });
   }
 });

@@ -6,6 +6,7 @@ export async function getConfigurations() {
       name
       value
       id
+      options
     }
   }
 `;

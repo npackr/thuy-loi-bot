@@ -30,7 +30,10 @@ const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 const cooldown = new Map();
 let user = { language: LANGUAGE };
 let string = getString(user.language);
-const prefix = string.BOT_BUZZ_WORD;
+const configurations = await getConfigurations();
+const customPrefix = await configurations.find(config => config.name === "customPrefix");
+const prefix = (customPrefix.value) ? customPrefix.options.BOT_BUZZ_WORD : string.BOT_BUZZ_WORD;
+console.log("Prefix: " + prefix);
 
 rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: createCommandsList() });
 discordClient.once('ready', () => { discordClient.user.setActivity(`V${process.env.npm_package_version}`); discordClient.user.setStatus('online'); console.log("Discord Bot logged in successfully and waiting for commands!"); });
@@ -79,6 +82,7 @@ discordClient.on('messageCreate', async message => {
   if (messageContent.startsWith(prefix.toLowerCase()) || messageContent.startsWith(vnstr.rmVnTones(prefix.toLowerCase()))) {
     if (messageContent.length > 99) { return await message.reply(string.MESSAGE_TOO_LONG); }
     if (messageContent.length < 12) { await ctx.reply(string.PLEASE_LET_ME_KNOW_WHAT_YOU_WANT_TO_SAY); return; }
+    message.channel.sendTyping();
     const simReply = await getSimReply(user, messageContent.substring(12, 99));
     if (simReply) { return await message.reply(simReply); }
   } else {

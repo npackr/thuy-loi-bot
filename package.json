@@ -1,6 +1,6 @@
 {
   "name": "em-gai-thuy-loi-discord-bot",
-  "version": "2022.12.21.2",
+  "version": "2022.12.21.4",
   "description": "A Discord Bot for university admission broadcasting",
   "main": "deploy-commands.js",
   "scripts": {

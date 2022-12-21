@@ -61,7 +61,7 @@ discordClient.on('messageCreate', async message => {
 
   // USER INSTRUCTIONS
   if (message.mentions.has(discordClient.user) || checkBotInstructionConditions(message.content)) {
-    const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/find_out_em_gai_thuy_loi.jpg');
+    const instructionImage = new AttachmentBuilder().setFile('./src/assets/images/discord_instruction.png');
     return await message.reply({ content: `${string.BOT_INSTRUCTION}\n\n${string.YOU_CAN_DIRECTLY_ASKING_FOR}\n\n${string.OR_YOU_CAN_ASK_EVERYTHING_BY}`, files: [instructionImage] });
   }
 

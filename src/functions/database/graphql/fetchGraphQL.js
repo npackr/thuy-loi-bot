@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-
+import { config } from "dotenv"; config();
 
 export async function fetchGraphQL(operationsDoc, operationName, variables) {
   const endpoint = "https://nearby-squirrel-90.hasura.app/v1/graphql";

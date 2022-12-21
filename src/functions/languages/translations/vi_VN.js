@@ -1,7 +1,15 @@
+import { getConfigurations } from "../../database/queries/common/getConfigurations.js";
+
+const configurations = await getConfigurations();
+const customPrefix = await configurations.find(config => config.name === "customPrefix");
+const customName = await configurations.find(config => config.name === "customName");
+const prefix = (customPrefix.value) ? customPrefix.options.BOT_BUZZ_WORD : "Thủy Lợi Ơi"
+const botName = (customName.value) ? customName.options.BOT_NAME : "Thủy Lợi";
+
 export const ADMIN_ID = "336096287407472641";
 export const TELEGARM_BOT_USERNAME = "@emgaithuyloi_bot";
-export const BOT_NAME = "Thủy Lợi";
-export const BOT_BUZZ_WORD = "Thủy Lợi Ơi";
+export const BOT_NAME = botName;
+export const BOT_BUZZ_WORD = prefix;
 export const SUCCESSFUL_ICON = "✅";
 export const ERROR_ICON = "❌";
 export const SCHOOL_LOGO = "<:tls_logo:1028356562537951252>";

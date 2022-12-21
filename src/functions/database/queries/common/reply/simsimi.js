@@ -9,7 +9,7 @@ const badWords = [
   "Má", "Bố", "Gay"
 ];
 
-export async function getSimReply(userLanguage, userMessage) {
+export async function getSimReply(userLanguage, userMessage, botName) {
   const string = getString(userLanguage);
   let message = userMessage;
   let lang = "vn";
@@ -23,25 +23,25 @@ export async function getSimReply(userLanguage, userMessage) {
   if (vnstr.hasOffensiveWords(message)) return string.DO_NOT_UNDESTAND;
   const badScore = await getBadScore(lang, message); console.log(badScore); if (badScore.bad > 0.2) return string.PLEASE_WATCH_YOUR_LANGUAGE;
   const includeBadWords = badWords.some(word => message.includes(word) || message.includes(word.toUpperCase()) || message.includes(word.toLowerCase())); if (includeBadWords) return string.PLEASE_WATCH_YOUR_LANGUAGE;
-  message = message.replaceAll(string.BOT_NAME, "sim"); message = message.replaceAll(string.BOT_NAME.toLowerCase(), "sim");
+  message = message.replaceAll(botName, "sim"); message = message.replaceAll(botName.toLowerCase(), "sim");
 
-  const reply = await getReplyFromAPI("premium", lang, message);
+  const reply = await getReplyFromAPI("premium", lang, message, botName);
   if (reply === string.SOMETHING_WHEN_WRONG) return await getReplyFromAPI("free", lang, message)
   else return reply;
 }
 
-async function getReplyFromAPI(preferAPI, lang, message) {
+async function getReplyFromAPI(preferAPI, lang, message, botName) {
   const string = getString(lang);
   if (preferAPI == "free") {
     const data = await getFreeSimReply(lang, message); let reply = data.response;
-    if (data.status == "success") { reply = replaceAllSimWithBotName(reply, string.BOT_NAME); reply = removeBadWords(reply); return reply; }
+    if (data.status == "success") { reply = replaceAllSimWithBotName(reply, botName); reply = removeBadWords(reply); return reply; }
     else if (data.status == "false - 1" || data.status == "false - 2" || data.status == "false - 3") { return string.DO_NOT_UNDESTAND; }
     else return string.SOMETHING_WHEN_WRONG;
   }
   if (preferAPI == "premium") {
     const data = await getSimSmallTalkReply(lang, message);
     let reply = data.message;
-    if (data.status == "success") { reply = replaceAllSimWithBotName(reply, string.BOT_NAME); reply = removeBadWords(reply); return reply; }
+    if (data.status == "success") { reply = replaceAllSimWithBotName(reply, botName); reply = removeBadWords(reply); return reply; }
     else if (data.status == "fail") { return string.DO_NOT_UNDESTAND; }
     else return string.SOMETHING_WHEN_WRONG;
   }

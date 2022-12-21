@@ -1,4 +1,5 @@
 import { fetchGraphQL } from "../../graphql/fetchGraphQL.js";
+
 export async function getConfigurations() {
   const operationsDoc = `
   query getConfigurations {

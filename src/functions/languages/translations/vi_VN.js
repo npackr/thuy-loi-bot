@@ -7,7 +7,7 @@ const prefix = (customPrefix.value) ? customPrefix.options.BOT_BUZZ_WORD : "Th�
 const botName = (customName.value) ? customName.options.BOT_NAME : "Thủy Lợi";
 
 export const ADMIN_ID = "336096287407472641";
-export const TELEGARM_BOT_USERNAME = "@emgaithuyloi_bot";
+export const TELEGARM_BOT_USERNAME = "@thuyloi_bot";
 export const BOT_NAME = botName;
 export const BOT_BUZZ_WORD = prefix;
 export const SUCCESSFUL_ICON = "✅";

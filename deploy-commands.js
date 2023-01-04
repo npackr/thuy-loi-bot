@@ -98,7 +98,7 @@ async function executeDiscordCommand(interaction, user) {
     const options = { configurations: configurations };
     await commandsRouter("register", interaction, user, options);
   }
-  if (interaction.commandName === 'addmission') {
+  if (interaction.commandName === 'admission') {
     await commandsRouter("admission", interaction, user);
   }
   if (interaction.commandName === 'reply') {

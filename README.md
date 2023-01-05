@@ -1,17 +1,17 @@
 # Thủy Lợi Bot (old name: Em Gái Thủy Lợi)
 
-* Currently support platform
+## Currently support platform
  - Discord
  - Telegram
  - You can set-up for other platform as your own decision
 
-* Function of the bot
+## Function of the bot
  - Reply to message by keyword
  - Command for browsing information from database
  - Collect RSS, show list of articles and summary 
  - Small talk with bad word filter, Simsimi Bad-score API. Supported by official Simsimi Small Talk API and free API of Simsimi.info
 
-* How to install
+##How to install
  - Clone this repository
  - ` npm install ` for install all Nodejs dependencies 
  - Use a ` .env ` file for your host config var to configuring these constraints

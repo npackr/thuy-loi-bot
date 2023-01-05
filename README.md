@@ -11,7 +11,7 @@
  - Collect RSS, show list of articles and summary 
  - Small talk with bad word filter, Simsimi Bad-score API. Supported by official Simsimi Small Talk API and free API of Simsimi.info
 
-##How to install
+## How to install
  - Clone this repository
  - ` npm install ` for install all Nodejs dependencies 
  - Use a ` .env ` file for your host config var to configuring these constraints

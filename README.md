@@ -19,7 +19,6 @@
   - HASURA_ADMIN_SECRET 
   - CLIENT_ID
   - SIMSIMI_API_KEY 
-  - TOPGG_TOKEN 
 - Set-up your database API to fit the bot's query in GraphQL
 - Run it with ` npm run deploy `
 - Now you can change anything you want to fit your requirements 
